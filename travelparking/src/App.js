@@ -1,51 +1,49 @@
-import React, { useEffect } from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, Image, ImageBackground, PermissionsAndroid, Platform, ScrollView, Text, TouchableOpacity, View} from "react-native";
-
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, PermissionsAndroid, Platform, Text, View, TextInput } from "react-native";
+import LoginScreen from './screens/LoginScreen';
+import MapScreen from './screens/MapScreen';
+import Geolocation from '@react-native-community/geolocation';
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInput, setUserInput] = useState('');
 
-  useEffect(() => {
-    
+  const handleOnChangeText = (input) => {
+    setUserInput(input);
+  };
 
-  }, []);
+  const handleOnPressLoginButton = () => {
+    setIsLoggedIn(true),
+    setUserInput('');
+  }
 
   return (
-    <SafeAreaView>
-      <StatusBar />
-      <View>
-        <Text>
-          index
-        </Text>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      {
+        !isLoggedIn ? (
+          <LoginScreen
+            onPressLoginButton={handleOnPressLoginButton}
+            onTextChange={handleOnChangeText}
+            userInput={userInput}
+          />
+        )
+        : (
+        <MapScreen
+          userInput={userInput}
+        />
+        )
+      }
+    </View>
   );
 };
 
-async function requestLocationPermission() {
-  if (Platform.OS !== 'android') return;
-  try {
-      const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-              title: 'Location Permission',
-              message: 'show my location need Location permission',
-              buttonNeutral: 'Ask Me Later',
-              buttonNegative: 'Cancel',
-              buttonPositive: 'OK',
-          },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('You can use the location');
-      } else {
-          console.log('Location permission denied');
-      }
-  } catch (err) {
-      console.warn(err);
-  }
-}
-
 const styles = StyleSheet.create({
- 
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+  },
 });
 
 export default App;
