@@ -24,7 +24,7 @@
         </intent-filter>
       </activity>
       <meta-data
-        android:name="com.naver.maps.map.travelparking"
+        android:name="com.naver.maps.map.CLIENT_ID"
         android:value="8uy59hdyxt"
       />
     </application>
