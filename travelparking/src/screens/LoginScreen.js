@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import Blank from '../components/Blank';
-import LoginButton from '../components/Button/loginButton';
+import LoginButton from '../components/Button/LoginButton';
 
 const LoginScreen = ({ onPressLoginButton, onTextChange, userInput }) => {
 
   return (
-    <View style={styles.inputContainer}>
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
         <Text style={styles.titleText}>
           트래블 파킹
         </Text>
@@ -22,6 +23,7 @@ const LoginScreen = ({ onPressLoginButton, onTextChange, userInput }) => {
         <Blank size={40} />
         <LoginButton onPress={onPressLoginButton}/>
       </View>
+    </View>
   );
 };
 

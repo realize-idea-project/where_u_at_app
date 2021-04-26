@@ -1,4 +1,4 @@
-async function requestLocationPermission() {
+export async function requestLocationPermission(PermissionsAndroid) {
   if (Platform.OS !== 'android') return;
   try {
       const granted = await PermissionsAndroid.request(

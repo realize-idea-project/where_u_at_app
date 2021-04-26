@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, PermissionsAndroid, Platform, Text, View, TextInput } from "react-native";
 import LoginScreen from './screens/LoginScreen';
 import MapScreen from './screens/MapScreen';
-import Geolocation from '@react-native-community/geolocation';
+import { requestLocationPermission } from './shared/requestLocationPermission.js';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInput, setUserInput] = useState('');
+
+  useEffect(() => {
+    console.log('permission in App.js');
+    requestLocationPermission(PermissionsAndroid);
+  }, []);
 
   const handleOnChangeText = (input) => {
     setUserInput(input);
@@ -15,27 +20,26 @@ const App = () => {
   const handleOnPressLoginButton = () => {
     setIsLoggedIn(true),
     setUserInput('');
-  }
+  };
 
-  return (
-    <View style={styles.container}>
-      {
-        !isLoggedIn ? (
-          <LoginScreen
-            onPressLoginButton={handleOnPressLoginButton}
-            onTextChange={handleOnChangeText}
-            userInput={userInput}
-          />
-        )
-        : (
-        <MapScreen
-          userInput={userInput}
-        />
-        )
-      }
-    </View>
-  );
+  const handlerOnPressBackButton = () => {
+    setIsLoggedIn(false);
+  };
+
+  return !isLoggedIn ? (
+    <LoginScreen
+      onPressLoginButton={handleOnPressLoginButton}
+      onTextChange={handleOnChangeText}
+      userInput={userInput}
+    />
+  ) : (
+    <MapScreen
+      userInput={userInput}
+      onPressBackButton={handlerOnPressBackButton}
+    />
+  )
 };
+
 
 const styles = StyleSheet.create({
   container: {
