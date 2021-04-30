@@ -2,35 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import Blank from '../components/Blank';
 import BackButton from '../components/Button/BackButton';
-import MapView from '../components/Map'
-
+import MapView from '../components/Map';
 import io from 'socket.io-client';
 import Geolocation from '@react-native-community/geolocation';
 
-const MapScreen = ({ onPressBackButton }) => {
+
+const mock = {
+  latitude: 37.551131,
+  longitude: 126.9153572
+}
+
+const getCurrentLocation = (coords, userInput) => ({
+  id: userInput,
+  location: {
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+  },
+});
+
+const MapScreen = ({ onPressBackButton, userInput }) => {
   const [socket, setSocket] = useState();
-  const [myLocation, setMyLocation] = useState({});
   const [memberLocations, setMemberLocations] = useState([]); // {name, location}
   
   useEffect(() => {
-    const newSocket = io(`http://192.168.0.246:3000`, { query: { roomNumber: 1 }});
+    const newSocket = io(`http://192.168.0.246:3000`, { query: userInput });
     setSocket(newSocket);
     return () => newSocket.close();
   }, []);
 
   useEffect(() => {
     if (!socket) return;
-    Geolocation.watchPosition(({coords}) => {
-      console.log('get my location', coords)
-      const { latitude, longitude } = coords;
-      setMyLocation({ latitude, longitude });
-
-      socket.emit('send-location', { latitude, longitude });
-      setMemberLocations([...memberLocations, { latitude, longitude }]);
-    }, {maximumAge: 3000});
+    Geolocation.watchPosition(({ coords }) => {
+      const location = getCurrentLocation(coords, userInput);
+      socket.emit('send-location', location);
+    }, { enableHighAccuracy: true, distanceFilter: 500 });
 
     socket.on('receive-location', (result)=> {
       console.log('result', result)
+      setMemberLocations([...memberLocations, result])
     });
 
     // return socket.off('receive-location');
@@ -42,7 +51,7 @@ const MapScreen = ({ onPressBackButton }) => {
         <BackButton onPress={onPressBackButton}/>
       </View>
       <MapView
-        myLocation={myLocation}
+        locationList={memberLocations}
       />
   </View>
   );

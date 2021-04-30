@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, PermissionsAndroid, Platform, Text, View, TextInput } from "react-native";
+import { StyleSheet, PermissionsAndroid } from "react-native";
 import LoginScreen from './screens/LoginScreen';
 import MapScreen from './screens/MapScreen';
 import { requestLocationPermission } from './shared/requestLocationPermission.js';
@@ -18,8 +18,7 @@ const App = () => {
   };
 
   const handleOnPressLoginButton = () => {
-    setIsLoggedIn(true),
-    setUserInput('');
+    setIsLoggedIn(true);
   };
 
   const handlerOnPressBackButton = () => {
