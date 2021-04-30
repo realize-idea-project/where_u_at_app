@@ -23,6 +23,7 @@ const App = () => {
 
   const handlerOnPressBackButton = () => {
     setIsLoggedIn(false);
+    setUserInput('');
   };
 
   return !isLoggedIn ? (

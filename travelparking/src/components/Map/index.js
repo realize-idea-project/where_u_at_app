@@ -13,7 +13,9 @@ const magok = { latitude: 37.560220, longitude: 126.824017};
 const mockList = [ P0, P1, P2, P4, P5 ];
 
 const renderMarkers = (list) => {
-  return list.map(({id, location}, index) => (
+  const markerList = list ? [...list, ...mockList] : mockList;
+
+  return markerList.map(({id, location}, index) => (
   <Marker
     key={location.latitude.toString()}
     coordinate={location}
@@ -23,9 +25,6 @@ const renderMarkers = (list) => {
 };
 
 const MapView = ({ locationList }) => {
-  console.log(locationList)
-  if (_.isEmpty(locationList)) return null;
-  const list = [...locationList, ...mockList];
   return (
     <NaverMapView
       style={{width: '100%', height: '100%'}}
@@ -38,7 +37,7 @@ const MapView = ({ locationList }) => {
       {/* <Marker coordinate={currentPosition} onClick={() => console.warn('onClick! p0')}/>
       <Marker coordinate={P1} pinColor="blue" onClick={() => console.warn('onClick! p1')}/>
       <Marker coordinate={P2} pinColor="red" onClick={() => console.warn('onClick! p2')}/> */}
-      {renderMarkers(list)}
+      {renderMarkers(locationList)}
     </NaverMapView>
   );
 };

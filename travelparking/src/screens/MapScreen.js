@@ -45,10 +45,16 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
     // return socket.off('receive-location');
   }, [socket]);
 
+  const handlePressBackButton = (event) => {
+    onPressBackButton(event);
+    const newMemberLocations = memberLocations.filter((item) => item.id !== userInput);
+    setMemberLocations(newMemberLocations);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <BackButton onPress={onPressBackButton}/>
+        <BackButton onPress={handlePressBackButton}/>
       </View>
       <MapView
         locationList={memberLocations}
