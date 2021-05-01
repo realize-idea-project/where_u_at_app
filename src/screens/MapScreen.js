@@ -1,16 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Alert } from "react-native";
+import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity } from "react-native";
 import Blank from '../components/Blank';
 import BackButton from '../components/Button/BackButton';
 import MapView from '../components/Map';
 import io from 'socket.io-client';
 import Geolocation from '@react-native-community/geolocation';
 
-
 const mock = {
   latitude: 37.551131,
   longitude: 126.9153572
-}
+};
+
+const showAlert = (title, sentence) => {
+  Alert.alert(
+    `${title}`,
+    `${sentence}`,
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+      { text: "OK", onPress: () => console.log("OK Pressed") }
+    ]
+  );
+};
 
 const getCurrentLocation = (coords, userInput) => ({
   id: userInput,
@@ -23,10 +37,14 @@ const getCurrentLocation = (coords, userInput) => ({
 const MapScreen = ({ onPressBackButton, userInput }) => {
   const [socket, setSocket] = useState();
   const [memberLocations, setMemberLocations] = useState([]); // {name, location}
-  
+
+  useEffect(() => {
+    showAlert('mounted', 'map mounted');
+  }, []);
+
   useEffect(() => {
     // const newSocket = io(`http://192.168.0.246:8080`, { query: userInput });
-    const newSocket = io(`http://whereuat-env.eba-qzqmst7s.ap-northeast-2.elasticbeanstalk.com/`, { query: userInput });
+    const newSocket = io(`http://whereuat-env.eba-qzqmst7s.ap-northeast-2.elasticbeanstalk.com`);
     setSocket(newSocket);
     return () => newSocket.close();
   }, []);
@@ -47,18 +65,7 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
 
     socket.on('receive-location', (result)=> {
       console.log('result', result)
-      Alert.alert(
-        "신동 생축이요 ㅋㅋ",
-        `lat: ${result.location.latitude}, long: ${result.location.longitude}`,
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel"
-          },
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ]
-      );
+      showAlert('get position', `lat: ${result.location.latitude}, long: ${result.location.longitude}`);
       setMemberLocations([...memberLocations, result])
     });
 
@@ -71,10 +78,29 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
     setMemberLocations(newMemberLocations);
   };
 
+  const callApi = () => {
+    console.log('api called')
+    fetch('http://whereuat-env.eba-qzqmst7s.ap-northeast-2.elasticbeanstalk.com',{
+      method: 'GET',
+      mode: 'cors',
+    }).then(res => {
+      showAlert('api called', `${res.status}`)
+    });
+  };
+
+  const handlePressCheckButton = async () => {
+    callApi();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <BackButton onPress={handlePressBackButton}/>
+      </View>
+      <View style={{height: 30}}>
+        <TouchableOpacity onPress={handlePressCheckButton} style={{height: '100%'}}>
+          <Text>API Check</Text>
+        </TouchableOpacity>
       </View>
       <MapView
         locationList={memberLocations}
