@@ -85,6 +85,9 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
       mode: 'cors',
     }).then(res => {
       showAlert('api called', `${res.status}`)
+      return res.json();
+    }).then(data => {
+      showAlert('answer', data);
     });
   };
 
