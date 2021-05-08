@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, PermissionsAndroid } from "react-native";
+import { StyleSheet, PermissionsAndroid, Platform } from "react-native";
 import LoginScreen from './screens/LoginScreen';
 import MapScreen from './screens/MapScreen';
 import { requestLocationPermission } from './shared/requestLocationPermission.js';
@@ -10,9 +10,13 @@ const App = () => {
 
   useEffect(() => {
     console.log('permission in App.js');
-    requestLocationPermission(PermissionsAndroid);
+    if (Platform.OS === 'android') {
+      console.log('Android');
+      requestLocationPermission(PermissionsAndroid);
+    }
   }, []);
 
+  
   const handleOnChangeText = (input) => {
     setUserInput(input);
   };

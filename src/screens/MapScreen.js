@@ -6,8 +6,8 @@ import MapView from '../components/Map';
 import io from 'socket.io-client';
 import Geolocation from '@react-native-community/geolocation';
 
-const url = 'https://api.travelparking.online'
-// const url ='http://192.168.0.246:8080';
+// const url = 'https://api.travelparking.online'
+const url ='http://192.168.0.246:8080';
 
 const mock = {
   latitude: 37.551131,
@@ -42,7 +42,7 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
     const newSocket = io(url, { query: userInput } );
     setSocket(newSocket);
     return () => newSocket.close();
-  }, []);
+  });
 
   useEffect(() => {
     if (!socket) return;

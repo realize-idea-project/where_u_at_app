@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 export async function requestLocationPermission(PermissionsAndroid) {
   if (Platform.OS !== 'android') return;
   try {
