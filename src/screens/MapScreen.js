@@ -6,7 +6,7 @@ import MapView from '../components/Map';
 import io from 'socket.io-client';
 import Geolocation from '@react-native-community/geolocation';
 
-const url = 'http://api.travelparking.online'
+const url = 'https://api.travelparking.online'
 
 const mock = {
   latitude: 37.551131,
