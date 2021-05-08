@@ -6,6 +6,8 @@ import MapView from '../components/Map';
 import io from 'socket.io-client';
 import Geolocation from '@react-native-community/geolocation';
 
+const url = 'http://api.travelparking.online'
+
 const mock = {
   latitude: 37.551131,
   longitude: 126.9153572
@@ -44,7 +46,7 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
 
   useEffect(() => {
     // const newSocket = io(`http://192.168.0.246:8080`, { query: userInput });
-    const newSocket = io(`http://whereuat-env.eba-qzqmst7s.ap-northeast-2.elasticbeanstalk.com`);
+    const newSocket = io(url);
     setSocket(newSocket);
     return () => newSocket.close();
   }, []);
@@ -80,7 +82,7 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
 
   const callApi = () => {
     console.log('api called')
-    fetch('http://whereuat-env.eba-qzqmst7s.ap-northeast-2.elasticbeanstalk.com',{
+    fetch(url,{
       method: 'GET',
       mode: 'cors',
     }).then(res => {
