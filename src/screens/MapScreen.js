@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 import Geolocation from '@react-native-community/geolocation';
 
 const url = 'https://api.travelparking.online'
+// const url ='http://192.168.0.246:8080';
 
 const mock = {
   latitude: 37.551131,
@@ -28,14 +29,6 @@ const showAlert = (title, sentence) => {
   );
 };
 
-const getCurrentLocation = (coords, userInput) => ({
-  id: userInput,
-  location: {
-    latitude: coords.latitude,
-    longitude: coords.longitude,
-  },
-});
-
 const MapScreen = ({ onPressBackButton, userInput }) => {
   const [socket, setSocket] = useState();
   const [memberLocations, setMemberLocations] = useState([]); // {name, location}
@@ -46,7 +39,7 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
 
   useEffect(() => {
     // const newSocket = io(`http://192.168.0.246:8080`, { query: userInput });
-    const newSocket = io(url);
+    const newSocket = io(url, { query: userInput } );
     setSocket(newSocket);
     return () => newSocket.close();
   }, []);
@@ -54,20 +47,39 @@ const MapScreen = ({ onPressBackButton, userInput }) => {
   useEffect(() => {
     if (!socket) return;
     Geolocation.watchPosition(({ coords }) => {
-      console.log('watchPosition')
-      const location = getCurrentLocation(coords, userInput);
-      socket.emit('send-location', location);
+      // console.log('watch')
+      showAlert('geo', 'watch');
+
+      const currentlocation = {
+        id: userInput,
+        location: {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        },
+      };
+
+      socket.emit('send-location', currentlocation);
     }, { enableHighAccuracy: true, distanceFilter: 400 });
 
     Geolocation.getCurrentPosition(({ coords }) => {
-      console.log('getPosition')
-      const location = getCurrentLocation(coords, userInput);
-      socket.emit('send-location', location);
+      // console.log('getCurrent')
+      showAlert('geo', 'getCurrent');
+
+      const currentlocation = {
+        id: userInput,
+        location: {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        },
+      };
+
+      socket.emit('send-location', currentlocation);
     });
 
     socket.on('receive-location', (result)=> {
       console.log('result', result)
-      showAlert('get position', `lat: ${result.location.latitude}, long: ${result.location.longitude}`);
+      // showAlert('get position', `lat: ${result.location.latitude}, long: ${result.location.longitude}`);
+      showAlert('received', result.id);
       setMemberLocations([...memberLocations, result])
     });
 

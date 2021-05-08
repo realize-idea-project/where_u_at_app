@@ -13,7 +13,7 @@ const magok = { latitude: 37.560220, longitude: 126.824017};
 const mockList = [ P0, P1, P2, P4, P5 ];
 
 const renderMarkers = (list) => {
-  const markerList = list ? [...list, ...mockList] : mockList;
+  const markerList = list ? [...list] : mockList;
 
   return markerList.map(({id, location}, index) => (
   <Marker
